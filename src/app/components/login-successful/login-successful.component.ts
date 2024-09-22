@@ -27,4 +27,8 @@ export class LoginSuccessfulComponent implements OnInit {
       }
     });
   }
+
+  manageUsers() {
+    
+  }
 }

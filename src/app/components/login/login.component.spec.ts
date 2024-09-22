@@ -1,29 +1,35 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
-import { LoginComponent } from './login.component';
-import { UsersService } from 'src/app/services/users.service';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { of, Subject } from 'rxjs';
+import { UsersService } from 'src/app/services/users.service';
+import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let usersService: jasmine.SpyObj<UsersService>;
   let router: jasmine.SpyObj<Router>;
+  let storeMock: any;
 
   beforeEach(async () => {
     const usersServiceSpy = jasmine.createSpyObj('UsersService', ['getUsers']);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    storeMock = {
+      dispatch: jasmine.createSpy()
+    };
 
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
+        {provide: Store, useValue: storeMock},
         { provide: UsersService, useValue: usersServiceSpy },
         { provide: Router, useValue: routerSpy }
-      ]
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;

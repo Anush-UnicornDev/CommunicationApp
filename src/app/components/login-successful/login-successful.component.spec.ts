@@ -38,7 +38,7 @@ describe('LoginSuccessfulComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fdescribe('ngOnInit', () => {
+  describe('ngOnInit', () => {
     it('should set the userName correctly if user data is available', () => {
       userSubject.next({ name: 'Test User' });
   

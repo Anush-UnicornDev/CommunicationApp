@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Constants } from 'src/app/interfaces/constants';
 import { UsersService } from 'src/app/services/users.service';
 
@@ -15,7 +16,8 @@ export class RegisterComponent implements OnInit{
 
   constructor(    
     private formBuilder: FormBuilder,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -28,14 +30,15 @@ export class RegisterComponent implements OnInit{
     })
   }
 
-  onRegister(user: any) {
-    console.log(user);
+  onRegister() {
+    const user = this.registerForm.value;
     this.usersService.getUsers().subscribe(resp => {
+
       const userExists = resp.data.filter((u: any) => u.email === user.email).length > 0;
       if (!userExists) {
         this.usersService.registerUser({user: user})
-          .subscribe(resp => {
-              console.log(resp);
+          .subscribe(_resp => {
+              this.router.navigate(['/users/registration-success']);
             });
       }
     });
@@ -43,7 +46,7 @@ export class RegisterComponent implements OnInit{
 
   checkPassword(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if(control.value !== null && control.value !== this.registerForm.get('password')?.value) {
+      if(control.value !== null && control.value !== this.registerForm?.get('password')?.value) {
         return { 'passwordDoesNotMatch': 'Password does not match' };
       }
       return null;
